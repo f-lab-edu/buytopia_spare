@@ -8,6 +8,7 @@ import lombok.Setter;
 @Getter
 public class MemberResponseDto {
     private Long id;
+    private String memberId;
     private String name;
     private String email;
     private String mainAddress;
@@ -16,6 +17,7 @@ public class MemberResponseDto {
 
     public MemberResponseDto(Member member) {
         this.id = member.getId();
+        this.memberId = member.getMemberId();
         this.name = member.getName();
         this.email = member.getEmail();
         this.mainAddress = member.getAddress().getMainAddress();

@@ -17,6 +17,9 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "member_id", nullable = false)
+    private String memberId;
+
     @Column(name = "name", nullable = false)
     private String name;
 
@@ -34,6 +37,7 @@ public class Member {
     private Address address;
 
     public Member(MemberRegistrationDto memberRegistrationDto, Address address) {
+        this.memberId = memberRegistrationDto.getMemberId();
         this.name = memberRegistrationDto.getName();
         this.email = memberRegistrationDto.getEmail();
         this.password = memberRegistrationDto.getPassword();

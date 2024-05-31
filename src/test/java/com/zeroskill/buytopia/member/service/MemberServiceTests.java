@@ -33,12 +33,13 @@ public class MemberServiceTests {
         String subAddress = "304호";
         String zipcode = "08728";
 
+        String memberId = "zeroskill2400";
         String name = "김범수";
         String email = "zeroskill2400@gmail.com";
         String password = "abcd1234";
 
         AddressDto addressDto = new AddressDto(mainAddress, subAddress, zipcode);
-        MemberRegistrationDto memberRegistrationDto = new MemberRegistrationDto(name, email, password, addressDto);
+        MemberRegistrationDto memberRegistrationDto = new MemberRegistrationDto(memberId, name, email, password, addressDto);
 
         Address address = new Address(addressDto);
         Member member = new Member(memberRegistrationDto, address);
@@ -46,12 +47,14 @@ public class MemberServiceTests {
         given(memberRepository.save(any(Member.class))).willReturn(member);
 
         MemberResponseDto memberResponseDto = memberService.registerMember(memberRegistrationDto);
+        assertNotNull(memberResponseDto.getMemberId());
         assertNotNull(memberResponseDto.getName());
         assertNotNull(memberResponseDto.getEmail());
         assertNotNull(memberResponseDto.getMainAddress());
         assertNotNull(memberResponseDto.getSubAddress());
         assertNotNull(memberResponseDto.getZipcode());
 
+        assertEquals(memberId, memberResponseDto.getMemberId());
         assertEquals(name, memberResponseDto.getName());
         assertEquals(email, memberResponseDto.getEmail());
         assertEquals(mainAddress, memberResponseDto.getMainAddress());

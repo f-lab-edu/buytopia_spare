@@ -39,14 +39,15 @@ public class MemberControllerTests {
 
     @Test
     void testRegisterMember() throws Exception {
-        String name = "zeroskill2400";
+        String memberId = "zeroskill2400";
+        String name = "김범수";
         String email = "zeroskill2400@gmail.com";
         String password = "zeroskill2400";
         String mainAddress = "서울특별시 관악구 서울대학교";
         String subAddress = "304호";
         String zipcode = "12345";
         AddressDto addressDto = new AddressDto(mainAddress, subAddress, zipcode);
-        MemberRegistrationDto memberRegistrationDto = new MemberRegistrationDto(name, email, password, addressDto);
+        MemberRegistrationDto memberRegistrationDto = new MemberRegistrationDto(memberId, name, email, password, addressDto);
 
         Address address = new Address(addressDto);
         Member member = new Member(memberRegistrationDto, address);
@@ -55,7 +56,6 @@ public class MemberControllerTests {
         ResponseEntity<MemberResponseDto> responseEntity = ResponseEntity.ok().body(memberResponseDto);
 
         given(memberService.registerMember(any(MemberRegistrationDto.class))).willReturn(memberResponseDto);
-
         given(memberResponseConverter.convertToResponseEntity(any(MemberResponseDto.class))).willReturn(responseEntity);
 
         String requestBody = objectMapper.writeValueAsString(memberRegistrationDto);
@@ -66,6 +66,7 @@ public class MemberControllerTests {
                         .content(requestBody))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.memberId").value(memberId))
                 .andExpect(jsonPath("$.name").value(name))
                 .andExpect(jsonPath("$.email").value(email))
                 .andExpect(jsonPath("$.mainAddress").value(mainAddress))
