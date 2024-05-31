@@ -19,4 +19,16 @@ public class MemberService {
         Member savedMember = memberRepository.save(member);
         return new MemberResponseDto(savedMember);
     }
+
+    public boolean isMemberIdDuplicate(String memberId) {
+        return memberRepository.findByMemberId(memberId).isPresent();
+    }
+
+    public boolean isEmailDuplicate(String email) {
+        return memberRepository.findByEmail(email).isPresent();
+    }
+
+    public boolean isMemberIdOrEmailDuplicate(String memberId, String email) {
+        return isMemberIdDuplicate(memberId) || isEmailDuplicate(email);
+    }
 }
