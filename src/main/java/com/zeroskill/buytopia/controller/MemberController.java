@@ -1,10 +1,7 @@
 package com.zeroskill.buytopia.controller;
 
 import com.zeroskill.buytopia.converter.MemberResponseConverter;
-import com.zeroskill.buytopia.dto.MemberDuplicateCheckDto;
-import com.zeroskill.buytopia.dto.MemberDuplicateResponseDto;
-import com.zeroskill.buytopia.dto.MemberRegistrationDto;
-import com.zeroskill.buytopia.dto.MemberResponseDto;
+import com.zeroskill.buytopia.dto.*;
 import com.zeroskill.buytopia.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -96,5 +93,32 @@ public class MemberController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new MemberDuplicateResponseDto("MemberId is already taken", HttpStatus.OK));
+    }
+
+    @PostMapping("/password-strength")
+    public ResponseEntity<PasswordStrengthCheckResponseDto> checkMemberAvailability(@Valid @RequestBody PasswordStrengthCheckDto passwordStrengthCheckDto, BindingResult result) {
+//        질문
+//        if (result.hasFieldErrors("password") || result.hasFieldErrors("password")) {
+//              String errorMessage = "Password is required";
+//              return handleFieldErrors(errorMessage);
+//        }
+        if (passwordStrengthCheckDto.password() == null) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(new PasswordStrengthCheckResponseDto("Password is required", false, HttpStatus.BAD_REQUEST));
+        }
+        String password = passwordStrengthCheckDto.password();
+        boolean isStrongPassword = memberService.checkPasswordStrength(password);
+
+        if (isStrongPassword) {
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(new PasswordStrengthCheckResponseDto("Strong password", true, HttpStatus.OK));
+        } else {
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(new PasswordStrengthCheckResponseDto("Weak password", false, HttpStatus.OK));
+        }
+
     }
 }

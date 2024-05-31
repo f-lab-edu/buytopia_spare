@@ -8,6 +8,8 @@ import com.zeroskill.buytopia.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.regex.Pattern;
+
 @Service
 @RequiredArgsConstructor
 public class MemberService {
@@ -30,5 +32,13 @@ public class MemberService {
 
     public boolean isMemberIdOrEmailDuplicate(String memberId, String email) {
         return isMemberIdDuplicate(memberId) || isEmailDuplicate(email);
+    }
+
+    public boolean checkPasswordStrength(String password) {
+        // 정규 표현식 패턴
+        String regex = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,20}$";
+
+        // 패턴과 매치되는지 확인
+        return Pattern.compile(regex).matcher(password).matches();
     }
 }
